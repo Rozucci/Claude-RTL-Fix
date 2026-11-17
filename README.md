@@ -40,7 +40,7 @@ where Markdown expects them.
 At the prompt of a Claude Code terminal session:
 
 ```
-/plugin install rtl-fix --marketplace ShayanTheCreator/Claude-RTL-Fix
+/plugin install rtl-fix --marketplace Rozucci/Claude-RTL-Fix
 ```
 
 Answer `y` to add the marketplace, then pick a scope (user scope is first).
@@ -48,11 +48,11 @@ Answer `y` to add the marketplace, then pick a scope (user scope is first).
 From a shell:
 
 ```bash
-claude plugin install rtl-fix --marketplace ShayanTheCreator/Claude-RTL-Fix
+claude plugin install rtl-fix --marketplace Rozucci/Claude-RTL-Fix
 ```
 
 In the desktop app, where `/plugin` does not run: click **+** next to the prompt
-box, then **Plugins**, **Add marketplace** with `ShayanTheCreator/Claude-RTL-Fix`,
+box, then **Plugins**, **Add marketplace** with `Rozucci/Claude-RTL-Fix`,
 then **Add plugin**. A mod installed from a terminal at the user scope also loads
 in the desktop app's Code tab.
 
@@ -133,7 +133,7 @@ else that draws Markdown.
 </div>
 
 ```
-/plugin install rtl-fix --marketplace ShayanTheCreator/Claude-RTL-Fix
+/plugin install rtl-fix --marketplace Rozucci/Claude-RTL-Fix
 ```
 
 <div dir="rtl">
@@ -146,13 +146,13 @@ else that draws Markdown.
 </div>
 
 ```bash
-claude plugin install rtl-fix --marketplace ShayanTheCreator/Claude-RTL-Fix
+claude plugin install rtl-fix --marketplace Rozucci/Claude-RTL-Fix
 ```
 
 <div dir="rtl">
 
 در اپ دسکتاپ، که `/plugin` در آن اجرا نمی‌شود: روی **+** کنار جعبهٔ پیام بزنید،
-بعد **Plugins**، بعد **Add marketplace** با `ShayanTheCreator/Claude-RTL-Fix` و
+بعد **Plugins**، بعد **Add marketplace** با `Rozucci/Claude-RTL-Fix` و
 در آخر **Add plugin**. افزونه‌ای که از ترمینال در محدودهٔ user نصب شود، در تب
 Code اپ دسکتاپ هم بار می‌شود.
 

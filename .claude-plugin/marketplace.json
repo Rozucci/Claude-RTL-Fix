@@ -1,7 +1,7 @@
 {
   "name": "claude-rtl-fix",
   "owner": {
-    "name": "ShayanTheCreator"
+    "name": "Rozucci"
   },
   "metadata": {
     "description": "Right-to-left (Persian, Arabic) text fixes for Claude's interfaces"
