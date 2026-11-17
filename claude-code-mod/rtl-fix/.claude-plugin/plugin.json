@@ -1,0 +1,11 @@
+{
+  "name": "rtl-fix",
+  "version": "0.2.0",
+  "description": "Fixes mixed Persian/English (RTL/LTR) text in Claude Code's transcript",
+  "author": { "name": "ShayanTheCreator" },
+  "homepage": "https://github.com/ShayanTheCreator/Claude-RTL-Fix",
+  "repository": "https://github.com/ShayanTheCreator/Claude-RTL-Fix",
+  "license": "MIT",
+  "keywords": ["rtl", "bidi", "persian", "farsi", "arabic", "unicode"],
+  "types": "./types/index.d.ts"
+}

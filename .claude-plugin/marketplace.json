@@ -1,0 +1,16 @@
+{
+  "name": "claude-rtl-fix",
+  "owner": {
+    "name": "ShayanTheCreator"
+  },
+  "metadata": {
+    "description": "Right-to-left (Persian, Arabic) text fixes for Claude's interfaces"
+  },
+  "plugins": [
+    {
+      "name": "rtl-fix",
+      "source": "./claude-code-mod/rtl-fix",
+      "description": "Fixes mixed Persian/English (RTL/LTR) text in Claude Code's transcript"
+    }
+  ]
+}
