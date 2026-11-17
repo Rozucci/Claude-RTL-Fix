@@ -16,6 +16,13 @@ links, Claude's interfaces often draw it in the wrong order: a line that starts
 with an English word is laid out left to right, punctuation jumps to the wrong
 end, and `Claude Code (v2)` style runs pull brackets and dots across the line.
 
+The Claude desktop app already picks each paragraph's direction from its first
+letter, so lines that start with a Persian word look fine. It still breaks
+lines that start with an English word, and numbers with units (`25°C` shows as
+`C°25`). The same text, drawn three ways:
+
+![Raw text, raw text with dir=auto, and text through rtl-fix](docs/comparison%20raw%20vs%20dir-auto%20vs%20rtl-fix.jpg)
+
 ### What this does
 
 `rtl-fix` is a Claude Code mod. It changes **only what is drawn**: the stored
@@ -77,9 +84,10 @@ else that draws Markdown.
 
 ### Known limits
 
-- **Alignment.** Persian lines read right to left but are not flush right: the
-  Claude Code mod API offers `dir="rtl"` only on plain `Text`, not on a rendered
-  Markdown reply.
+- **Alignment.** In the desktop app Persian paragraphs are flush right, lines
+  that start with English included (checked by eye, with `/rtl` off and on). In
+  the terminal they read right to left but stay flush left: the mod API offers
+  `dir="rtl"` only on plain `Text`, not on a rendered Markdown reply.
 - **Table columns** keep left-to-right order in the terminal; only the text
   inside each cell is fixed.
 - A terminal that reorders text by itself may draw the result differently.
@@ -108,6 +116,11 @@ else that draws Markdown.
 اغلب آن را به ترتیب غلط نشان می‌دهند: سطری که با یک کلمهٔ انگلیسی شروع شود
 چپ‌به‌راست چیده می‌شود، علامت‌های نگارشی به سر دیگر سطر می‌پرند و پرانتز و نقطه
 جابه‌جا می‌شوند.
+
+اپ دسکتاپ Claude خودش جهت هر پاراگراف را از اولین حرفش تشخیص می‌دهد، برای
+همین سطری که با کلمهٔ فارسی شروع شود درست دیده می‌شود. ولی سطری که با کلمهٔ
+انگلیسی شروع شود، و عدد با واحد (مثل `25°C` که `C°25` دیده می‌شود)، هنوز خراب
+است. تصویر مقایسه در بخش انگلیسی بالا هست.
 
 ### این افزونه چه می‌کند
 
@@ -162,9 +175,10 @@ Code اپ دسکتاپ هم بار می‌شود.
 
 ### محدودیت‌های فعلی
 
-- **چینش راست:** سطرهای فارسی درست از راست به چپ خوانده می‌شوند ولی به لبهٔ
-  راست نمی‌چسبند، چون API افزونه‌های Claude Code فعلاً `dir="rtl"` را فقط برای
-  متن ساده دارد، نه برای پاسخ Markdown.
+- **چینش راست:** در اپ دسکتاپ پاراگراف‌های فارسی راست‌چین‌اند، حتی سطری که
+  با انگلیسی شروع می‌شود (با چشم و با خاموش و روشن کردن `/rtl` بررسی شد). در
+  ترمینال درست از راست به چپ خوانده می‌شوند ولی چپ‌چین می‌مانند، چون API
+  افزونه‌ها `dir="rtl"` را فقط برای متن ساده دارد، نه برای پاسخ Markdown.
 - **ستون‌های جدول** در ترمینال همچنان از چپ به راست چیده می‌شوند؛ فقط متن داخل
   هر خانه درست می‌شود.
 - ترمینالی که خودش متن را بازچینی می‌کند ممکن است نتیجه را متفاوت نشان دهد.
