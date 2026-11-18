@@ -81,6 +81,17 @@ From a shell:
 claude plugin install rtl-fix --marketplace Rozucci/Claude-RTL-Fix
 ```
 
+An older Claude Code answers `unknown option '--marketplace'`. Then add the
+marketplace first, or run `claude update`:
+
+```bash
+claude plugin marketplace add Rozucci/Claude-RTL-Fix
+```
+
+```bash
+claude plugin install rtl-fix@claude-rtl-fix
+```
+
 In the desktop app, where `/plugin` does not run: click **+** next to the prompt
 box, then **Plugins**, **Add marketplace** with `Rozucci/Claude-RTL-Fix`,
 then **Add plugin**. A mod installed from a terminal at the user scope also loads
@@ -212,6 +223,21 @@ send: open an issue with the text as Claude wrote it and a screenshot.
 
 ```bash
 claude plugin install rtl-fix --marketplace Rozucci/Claude-RTL-Fix
+```
+
+<div dir="rtl">
+
+نسخه‌های قدیمی Claude Code جواب می‌دهند `unknown option '--marketplace'`. در این
+حالت اول marketplace را اضافه کنید، یا `claude update` را بزنید:
+
+</div>
+
+```bash
+claude plugin marketplace add Rozucci/Claude-RTL-Fix
+```
+
+```bash
+claude plugin install rtl-fix@claude-rtl-fix
 ```
 
 <div dir="rtl">
