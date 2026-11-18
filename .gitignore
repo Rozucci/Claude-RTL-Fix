@@ -3,3 +3,6 @@
 *.nosync
 node_modules
 .claude-plugin/types/
+
+# Compiled output of a stray tsc run
+claude-code-mod/rtl-fix/**/*.js

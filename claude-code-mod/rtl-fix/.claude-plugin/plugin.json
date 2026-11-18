@@ -1,11 +1,22 @@
 {
   "name": "rtl-fix",
   "version": "0.2.0",
-  "description": "Fixes mixed Persian/English (RTL/LTR) text in Claude Code's transcript",
-  "author": { "name": "Rozucci" },
+  "description": "Fixes mixed right-to-left (Persian, Arabic, Hebrew, Urdu ...) and English text in Claude Code's transcript",
+  "author": {
+    "name": "Rozucci"
+  },
   "homepage": "https://github.com/Rozucci/Claude-RTL-Fix",
   "repository": "https://github.com/Rozucci/Claude-RTL-Fix",
   "license": "MIT",
-  "keywords": ["rtl", "bidi", "persian", "farsi", "arabic", "unicode"],
+  "keywords": [
+    "rtl",
+    "bidi",
+    "persian",
+    "farsi",
+    "arabic",
+    "hebrew",
+    "urdu",
+    "unicode"
+  ],
   "types": "./types/index.d.ts"
 }

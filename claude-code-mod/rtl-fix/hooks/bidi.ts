@@ -1,11 +1,12 @@
 /**
- * The bidi engine: makes a Markdown text that mixes Persian (or any
- * Arabic-script language) with English read in the right order.
+ * The bidi engine: makes a Markdown text that mixes a right-to-left language
+ * (Persian, Arabic, Urdu, Hebrew, or any language written in the Arabic,
+ * Hebrew, Syriac, Thaana or N'Ko script) with English read in the right order.
  *
  * It works on the text itself, so any renderer benefits, with Unicode's own
  * direction marks (all invisible):
  *
- * - A line that is mostly Persian gets RLM + RLI ... PDI around its content.
+ * - A line that is mostly right-to-left gets RLM + RLI ... PDI around it.
  *   RLM is a strong right-to-left letter, so a renderer that picks a
  *   paragraph's direction from its first strong letter (dir="auto") picks RTL.
  *   RLI ... PDI lays the content out right to left even where the renderer
@@ -14,7 +15,7 @@
  *   every inline code span is wrapped in LRI ... PDI, so it keeps its own order
  *   and does not pull neighbouring punctuation across.
  *
- * - In a table row, each mostly-Persian cell is fixed the same way; the pipes
+ * - In a table row, each mostly right-to-left cell is fixed the same way; the pipes
  *   and the delimiter row stay as written.
  *
  * Left untouched: fenced code blocks, HTML lines, link targets, bare URLs and
@@ -27,21 +28,39 @@ export const RLI = '⁧'
 export const PDI = '⁩'
 export const RLM = '‏'
 
-const ARABIC_LETTER =
-  '\\u0620-\\u064A\\u066E-\\u06D3\\u06D5\\u06EE\\u06EF\\u06FA-\\u06FC\\u06FF\\u0750-\\u077F\\u08A0-\\u08FF\\uFB50-\\uFDFF\\uFE70-\\uFEFC'
+// Letters of the right-to-left scripts: Hebrew (Hebrew, Yiddish), Arabic
+// (Arabic, Persian, Urdu, Pashto, Kurdish, Sindhi, Uyghur ...), Syriac, Thaana
+// (Dhivehi), N'Ko, Samaritan, Mandaic, Hanifi Rohingya and Adlam (Fula).
+const RTL_LETTER =
+  '\\u05D0-\\u05EA\\u05EF-\\u05F2' + // Hebrew
+  '\\u0620-\\u064A\\u066E-\\u06D3\\u06D5\\u06EE\\u06EF\\u06FA-\\u06FC\\u06FF' + // Arabic
+  '\\u0710-\\u072F\\u074D-\\u074F' + // Syriac
+  '\\u0750-\\u077F' + // Arabic Supplement
+  '\\u0780-\\u07A5\\u07B1' + // Thaana
+  '\\u07CA-\\u07EA' + // N'Ko
+  '\\u0800-\\u0815' + // Samaritan
+  '\\u0840-\\u0858' + // Mandaic
+  '\\u08A0-\\u08FF' + // Arabic Extended-A
+  '\\uFB1D-\\uFB4F' + // Hebrew presentation forms
+  '\\uFB50-\\uFDFF\\uFE70-\\uFEFC' + // Arabic presentation forms
+  '\\u{10D00}-\\u{10D23}' + // Hanifi Rohingya
+  '\\u{1E900}-\\u{1E943}' // Adlam
 const LATIN_LETTER = 'A-Za-z\\u00C0-\\u024F'
 
-const ARABIC_LETTERS = new RegExp(`[${ARABIC_LETTER}]`, 'g')
-const LATIN_LETTERS = new RegExp(`[${LATIN_LETTER}]`, 'g')
-const FIRST_STRONG = new RegExp(`[${ARABIC_LETTER}${LATIN_LETTER}]`)
-const IS_ARABIC = new RegExp(`[${ARABIC_LETTER}]`)
+// Words, not letters, decide a line's language: Hebrew and Arabic leave most
+// vowels unwritten, so their words are short next to English ones. A word
+// keeps its combining marks (vowel signs) and, in Persian, the ZWNJ inside it.
+const RTL_WORDS = new RegExp(`[${RTL_LETTER}][${RTL_LETTER}\\p{M}\\u200C]*`, 'gu')
+const LATIN_WORDS = new RegExp(`[${LATIN_LETTER}][${LATIN_LETTER}\\p{M}'’]*`, 'gu')
+const FIRST_STRONG = new RegExp(`[${RTL_LETTER}${LATIN_LETTER}]`, 'u')
+const IS_RTL = new RegExp(`[${RTL_LETTER}]`, 'u')
 
 // A Latin run: words that start with a Latin letter, joined by single spaces,
 // with inner punctuation kept ("node.js", "C++", "f(x)"). A number written
 // right before a Latin unit joins the run ("12.5 USD", "25°C"). Sentence
 // punctuation, emphasis underscores and an unmatched ")" at its end are left
 // outside the run.
-const DIGIT = '0-9\\u06F0-\\u06F9'
+const DIGIT = '0-9\\u0660-\\u0669\\u06F0-\\u06F9' // Western, Arabic-Indic, Persian
 const QUANTITY = `(?:[${DIGIT}][${DIGIT}.,٫٬]*(?:[ \\u00A0]|°)?(?=[${LATIN_LETTER}]))?`
 const LATIN_WORD = `${QUANTITY}[${LATIN_LETTER}][${LATIN_LETTER}0-9'’+#/@&_.:()\\-–]*`
 const LATIN_NEXT = `[${LATIN_LETTER}0-9][${LATIN_LETTER}0-9'’+#/@&_.:()\\-–]*`
@@ -82,13 +101,13 @@ function withoutProtected(text: string): string {
 /** True when a line of text should read right to left. */
 export function isRtl(text: string): boolean {
   const plain = withoutProtected(text)
-  const arabic = plain.match(ARABIC_LETTERS)?.length ?? 0
-  if (arabic === 0) return false
+  const rtl = plain.match(RTL_WORDS)?.length ?? 0
+  if (rtl === 0) return false
 
-  const latin = plain.match(LATIN_LETTERS)?.length ?? 0
+  const latin = plain.match(LATIN_WORDS)?.length ?? 0
   const first = FIRST_STRONG.exec(plain)?.[0] ?? ''
 
-  return arabic >= latin || IS_ARABIC.test(first)
+  return rtl >= latin || IS_RTL.test(first)
 }
 
 /** Splits a run into what to isolate and what to leave after it. */
@@ -151,7 +170,7 @@ function wrapRtl(content: string): string {
   return `${RLM}${RLI}${isolateContent(content)}${PDI}`
 }
 
-/** Fixes each mostly-Persian cell of a table row; pipes stay as written. */
+/** Fixes each mostly right-to-left cell of a table row; pipes stay as written. */
 function fixTableRow(line: string): string {
   if (TABLE_DELIMITER.test(line)) return line
 
@@ -184,7 +203,7 @@ export function fixLine(line: string): string {
 
 /** Fixes a whole Markdown text, line by line, skipping fenced code. */
 export function fixBidi(markdown: string): string {
-  if (!IS_ARABIC.test(markdown)) return markdown
+  if (!IS_RTL.test(markdown)) return markdown
 
   let fence: string | null = null
 

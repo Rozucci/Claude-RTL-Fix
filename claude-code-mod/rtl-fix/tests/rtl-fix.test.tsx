@@ -167,6 +167,45 @@ const REPLY = (surface: 'terminal' | 'desktop', text: string) =>
 
 const SOURCE = 'این با Claude ساخته شد'
 
+// --- Other right-to-left languages -----------------------------------------
+
+test('Arabic: a line that starts with English, and Arabic-Indic numbers with a unit', () => {
+  expect(fixBidi('Python لغة برمجة شائعة.')).toBe(wrapped(`${iso('Python')} لغة برمجة شائعة.`))
+  expect(fixBidi('السعر ١٢٫٥ USD اليوم.')).toBe(wrapped(`السعر ${iso('١٢٫٥ USD')} اليوم.`))
+})
+
+test('Hebrew: English words and inline code read in the right order', () => {
+  expect(fixBidi('React היא ספרייה של JavaScript.')).toBe(
+    wrapped(`${iso('React')} היא ספרייה של ${iso('JavaScript')}.`),
+  )
+  expect(fixBidi('- התקנה עם `npm install`')).toBe(`- ${wrapped(`התקנה עם ${iso('`npm install`')}`)}`)
+  expect(isRtl('שלום עולם')).toBe(true)
+})
+
+test('Urdu: the Urdu full stop stays outside the English run', () => {
+  expect(fixBidi('یہ منصوبہ Claude Code سے بنایا گیا۔')).toBe(
+    wrapped(`یہ منصوبہ ${iso('Claude Code')} سے بنایا گیا۔`),
+  )
+})
+
+test('Hebrew with vowel signs counts each word once', () => {
+  expect(fixBidi('שָׁלוֹם לְכֻלָּם, זה Claude Code')).toBe(
+    wrapped(`שָׁלוֹם לְכֻלָּם, זה ${iso('Claude Code')}`),
+  )
+})
+
+test('an English sentence with one right-to-left word stays as written', () => {
+  expect(fixBidi('Say שלום to the new build')).toBe('Say שלום to the new build')
+  expect(fixBidi('The word مرحبا means hello')).toBe('The word مرحبا means hello')
+})
+
+test('Syriac, Thaana, N\'Ko and Adlam lines are detected as right to left', () => {
+  expect(isRtl('ܫܠܡܐ ܥܠܡܐ')).toBe(true)
+  expect(isRtl('ދިވެހި ބަސް')).toBe(true)
+  expect(isRtl('ߒߞߏ ߞߊ߲')).toBe(true)
+  expect(isRtl('𞤆𞤵𞤤𞤢𞤪')).toBe(true)
+})
+
 for (const surface of ['terminal', 'desktop'] as const) {
   test(`the reply is drawn fixed on ${surface}`, async ($, on) => {
     // Stands for the engine: draws the text it is handed.

@@ -10,7 +10,7 @@ export const register: Register = on => {
   on('session.start', async ($, e, next) => {
     await $.command.register({
       name: 'rtl',
-      description: 'Turn the Persian/English (RTL) text fix on or off',
+      description: 'Turn the right-to-left (Persian, Arabic, Hebrew) text fix on or off',
     })
 
     return next(e)
